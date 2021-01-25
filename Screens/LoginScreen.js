@@ -7,11 +7,12 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
+  Button,
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
 import Colors from "../Constants/Colors";
-import Button from "../Components/Button";
+import BtnComp from "../Components/Button";
 
 const LoginScreen = (props) => {
   return (
@@ -20,28 +21,48 @@ const LoginScreen = (props) => {
         behavior={Platform.OS == "ios" ? "padding" : "height"}
         style={styles.screen}
       >
+        {/* Titulo */}
         <Text style={styles.Title} adjustsFontSizeToFit={true}>
           User Register
         </Text>
         <View style={styles.circle}>
+          {/* Login */}
           <Text style={styles.label}>Login</Text>
+          {/* E-mail */}
           <TextInput
             placeholder="e-mail"
             style={styles.input}
             keyboardType="email-address"
           />
+          {/* Senha */}
           <TextInput
             placeholder="senha"
             style={styles.input}
             secureTextEntry={true}
             keyboardType="visible-password"
           />
-          <Button
-            text="Entrar"
-            color={Colors.color}
-            btnMargin={styles.button}
-            onPress={props.onEnter}
-          />
+          {/* Botões */}
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: 20,
+              width: 200,
+              justifyContent: "space-between",
+            }}
+          >
+            {/* Cadastrar */}
+            <Button
+              title="Cadastrar"
+              color="#06f"
+              onPress={props.onCadastrar}
+            />
+            {/* Entrar */}
+            <BtnComp
+              text="Entrar"
+              color={Colors.color}
+              onPress={props.onEnter}
+            />
+          </View>
         </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>

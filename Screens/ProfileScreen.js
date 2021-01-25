@@ -1,26 +1,55 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  DevSettings,
+  Alert,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import Colors from "../Constants/Colors";
-import Button from "../Components/Button";
-import { NavigationHelpersContext } from "@react-navigation/native";
+import BtnComp from "../Components/Button";
+
+import api from "../service";
 
 const ProfileScreen = ({ navigation }) => {
-  const [imagem, setimagem] = useState(<Ionicons name="person-circle" size={150} color={Colors.primary} />);
+  // NodeJS Request
+  const teste = () => {
+    api.get().then((response) => {
+      Alert.alert("", JSON.stringify(response.data))
+    }).catch((err) => {
+      console.error("ops! ocorreu um erro" + err);
+   });
+  };
+  // NodeJS Request END
+
+  const [imagem, setimagem] = useState(
+    <Ionicons name="person-circle" size={150} color={Colors.primary} />
+  );
 
   return (
     <View style={styles.screen}>
+      {/* Imagem perfil */}
       {imagem}
+      {/* Informações */}
       <Text style={styles.infoName}>Nome da Pessoa</Text>
       <Text style={styles.infoEmail}>e-mail</Text>
-      <Button
+      {/* Botão Editar */}
+      <BtnComp
         text="Editar"
-        btnStyle={styles.button}
+        btnStyle={styles.BtnComp}
         color={Colors.color}
         btnMargin={{ marginTop: 50 }}
         onPress={() => navigation.navigate("Editar")}
       />
+      {/* Botão sair */}
+      <View style={styles.sairBtn}>
+        <Button title="Sair" color="red" onPress={() => DevSettings.reload()} />
+      </View>
+      {/* Botão Teste */}
+      <Button title="Teste" onPress={() => teste()} />
     </View>
   );
 };
@@ -52,6 +81,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
+  },
+  sairBtn: {
+    width: 100,
+    marginTop: 20,
+    borderRadius: 10,
     overflow: "hidden",
   },
 });

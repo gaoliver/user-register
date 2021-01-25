@@ -7,14 +7,16 @@ import {
   View,
   Platform,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  DevSettings,
+  Alert
 } from "react-native";
 import Colors from "../Constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import BtnComp from "../Components/Button";
 import { TextInput } from "react-native-gesture-handler";
 
-const EditScreen = ({ navigation }) => {
+const EditScreen = ({ navigation }, props) => {
   const [imagem, setimagem] = useState(
     <MaterialIcons
       name="add-photo-alternate"
@@ -22,6 +24,25 @@ const EditScreen = ({ navigation }) => {
       color={Colors.primary}
     />
   );
+
+  const excluirConta = () => {
+    Alert.alert(
+      "Excluir perfil",
+      "Tem certeza que deseja excluir seu perfil?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => {},
+        },
+        {
+          text: "Sim",
+          onPress: () => DevSettings.reload(),
+          style: "destructive"
+        },
+      ],
+      { cancelable: true }
+    )
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -68,7 +89,7 @@ const EditScreen = ({ navigation }) => {
             text="Excluir"
             btnStyle={styles.button}
             color="red"
-            onPress={() => {}}
+            onPress={() => excluirConta()}
           />
           <BtnComp
             text="Salvar"
@@ -99,9 +120,10 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 300,
-    paddingVertical: 5,
+    paddingVertical: 10,
     paddingHorizontal: 10,
-    backgroundColor: "#FFF5",
+    backgroundColor: "#FFF9",
+    marginVertical: 5,
     borderRadius: 10,
   },
   picture: {
