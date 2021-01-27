@@ -1,6 +1,6 @@
 # User Register
 
-O User Register é um aplicativo de registro de perfis de usuários. Para rodar, siga os passos abaixo.
+O User Register é um aplicativo para celular (Android e iOS) de registro de perfis de usuários. Para rodar, siga os passos abaixo.
 
 
 # Instalação
