@@ -29,7 +29,7 @@ const CadastroScreen = ({ navigation }, props) => {
 
   const [nome, setnome] = useState("");
   const [email, setemail] = useState("");
-  const [senha, setsenha] = useState("senha");
+  const [senha, setsenha] = useState("");
 
   const [imagem, setimagem] = useState(
     <MaterialIcons
@@ -45,7 +45,6 @@ const CadastroScreen = ({ navigation }, props) => {
         behavior={Platform.OS == "ios" ? "padding" : "height"}
         style={styles.screen}
       >
-        {imagem}
         {/* Nome */}
         <View style={styles.box}>
           <Text style={styles.label}>Nome completo</Text>
@@ -74,6 +73,7 @@ const CadastroScreen = ({ navigation }, props) => {
             placeholder="****"
             textAlign="center"
             secureTextEntry={true}
+            onChangeText={(addSenha) => setsenha(addSenha)}
           />
         </View>
         {/* Salvar */}
