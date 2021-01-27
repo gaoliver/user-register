@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -8,13 +8,34 @@ import {
   Keyboard,
   Platform,
   Button,
+  Alert,
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
 import Colors from "../Constants/Colors";
 import BtnComp from "../Components/Button";
+import api from "../service";
 
-const LoginScreen = (props) => {
+const LoginScreen = ({navigation}, props) => {
+  // NodeJS Request
+  const onEnter = () => {
+    api.get("", { params: { email: email, senha: senha } }).then((res) => {
+      console.log(res.data);
+      const arr = Array.from(res.data);
+      if (arr.length == 0) {
+        Alert.alert("Erro de autenticação", "E-mail ou senha incorretos");
+      } else {
+        console.log("Ok! Entrando")
+        navigation.navigate('Perfil')
+      }
+    });
+  };
+  // NodeJS Request END
+
+  const [email, setemail] = useState("...");
+  const [senha, setsenha] = useState("...");
+
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -26,13 +47,12 @@ const LoginScreen = (props) => {
           User Register
         </Text>
         <View style={styles.circle}>
-          {/* Login */}
-          <Text style={styles.label}>Login</Text>
           {/* E-mail */}
           <TextInput
             placeholder="e-mail"
             style={styles.input}
             keyboardType="email-address"
+            onChangeText={(addEmail) => setemail(addEmail)}
           />
           {/* Senha */}
           <TextInput
@@ -40,6 +60,7 @@ const LoginScreen = (props) => {
             style={styles.input}
             secureTextEntry={true}
             keyboardType="visible-password"
+            onChangeText={(addSenha) => setsenha(addSenha)}
           />
           {/* Botões */}
           <View
@@ -54,13 +75,13 @@ const LoginScreen = (props) => {
             <Button
               title="Cadastrar"
               color="#06f"
-              onPress={props.onCadastrar}
+              onPress={() => navigation.navigate('Cadastro')}
             />
             {/* Entrar */}
             <BtnComp
               text="Entrar"
               color={Colors.color}
-              onPress={props.onEnter}
+              onPress={() => onEnter()}
             />
           </View>
         </View>
@@ -88,7 +109,7 @@ const styles = StyleSheet.create({
     lineHeight: 60,
   },
   circle: {
-    paddingVertical: Platform.OS === "ios" ? 80 : 60,
+    paddingVertical: Platform.OS === "ios" ? 100 : 80,
     paddingHorizontal: 50,
     backgroundColor: "#555",
     borderRadius: 200,

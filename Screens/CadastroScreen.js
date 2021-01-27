@@ -9,14 +9,28 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   DevSettings,
-  Alert
+  Alert,
 } from "react-native";
 import Colors from "../Constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import BtnComp from "../Components/Button";
 import { TextInput } from "react-native-gesture-handler";
 
-const CadastroScreen = (props) => {
+import api from "../service";
+
+const CadastroScreen = ({ navigation }, props) => {
+  // NodeJS Request
+  const cadastrar = () => {
+    api
+      .post("", { nome: nome, email: email, senha: senha })
+      .then(DevSettings.reload());
+  };
+  // NodeJS Request END
+
+  const [nome, setnome] = useState("");
+  const [email, setemail] = useState("");
+  const [senha, setsenha] = useState("senha");
+
   const [imagem, setimagem] = useState(
     <MaterialIcons
       name="add-photo-alternate"
@@ -24,25 +38,6 @@ const CadastroScreen = (props) => {
       color={Colors.primary}
     />
   );
-
-  const excluirConta = () => {
-    Alert.alert(
-      "Excluir perfil",
-      "Tem certeza que deseja excluir seu perfil?",
-      [
-        {
-          text: "Cancelar",
-          onPress: () => {},
-        },
-        {
-          text: "Sim",
-          onPress: () => DevSettings.reload(),
-          style: "destructive"
-        },
-      ],
-      { cancelable: true }
-    )
-  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -57,6 +52,7 @@ const CadastroScreen = (props) => {
           <TextInput
             style={styles.input}
             placeholder="Ex.: João da Silva Santos"
+            onChangeText={(addNome) => setnome(addNome)}
           />
         </View>
         {/* E-Mail */}
@@ -66,9 +62,10 @@ const CadastroScreen = (props) => {
             style={styles.input}
             keyboardType="email-address"
             placeholder="Ex.: joaodasilva@site.com"
+            onChangeText={(addEmail) => setemail(addEmail)}
           />
         </View>
-        {/* E-Mail */}
+        {/* Senha */}
         <View style={styles.box}>
           <Text style={styles.label}>Senha</Text>
           <TextInput
@@ -80,13 +77,13 @@ const CadastroScreen = (props) => {
           />
         </View>
         {/* Salvar */}
-          <BtnComp
-            text="Salvar"
-            btnStyle={styles.button}
-            color={Colors.color}
-            btnMargin={{marginTop: 20}}
-            onPress={props.onSaveCadastro}
-          />
+        <BtnComp
+          text="Salvar"
+          btnStyle={styles.button}
+          color={Colors.color}
+          btnMargin={{ marginTop: 20 }}
+          onPress={() => cadastrar()}
+        />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );

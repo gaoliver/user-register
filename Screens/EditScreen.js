@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   KeyboardAvoidingView,
@@ -9,21 +9,101 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   DevSettings,
-  Alert
+  Alert,
+  Image,
 } from "react-native";
 import Colors from "../Constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import BtnComp from "../Components/Button";
 import { TextInput } from "react-native-gesture-handler";
+import * as ImagePicker from "expo-image-picker";
+import Constants from "expo-constants";
+
+import api from "../service";
 
 const EditScreen = ({ navigation }, props) => {
-  const [imagem, setimagem] = useState(
-    <MaterialIcons
-      name="add-photo-alternate"
-      size={80}
-      color={Colors.primary}
-    />
-  );
+  // NodeJS Request
+  const [nome, setnome] = useState("");
+  const [email, setemail] = useState("");
+
+  const [getInfo, setgetInfo] = useState(true);
+
+  // GET
+  const database = () => {
+    api
+      .get("1")
+      .then((response) => {
+        setImage(response.data["foto"]);
+        setnome(response.data["nome"]);
+        setemail(response.data["email"]);
+      })
+      .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+      });
+  };
+
+  // PATCH
+  const editDatabase = () => {
+    api
+      .patch("1", { nome: nome, email: email, foto: image })
+      .then(navigation.navigate("Perfil"));
+  };
+
+  // DELETE
+  const deleteAccount = () => {
+    api.delete("1").then(DevSettings.reload());
+  };
+
+  const getFromDatabase = () => {
+    if (getInfo === true) {
+      database();
+      setgetInfo(false);
+    } else {
+      return;
+    }
+  };
+  // NodeJS Request END
+
+
+
+  // Escolher foto
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const {
+          status,
+        } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert(
+            "Neccesita da permissão de acesso ao rolo da câmera para funcionar."
+          );
+        }
+      }
+    })();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
+
+
+  const changeName = (addNome) => {
+    setnome(addNome);
+  };
 
   const excluirConta = () => {
     Alert.alert(
@@ -36,13 +116,13 @@ const EditScreen = ({ navigation }, props) => {
         },
         {
           text: "Sim",
-          onPress: () => DevSettings.reload(),
-          style: "destructive"
+          onPress: () => deleteAccount(),
+          style: "destructive",
         },
       ],
       { cancelable: true }
-    )
-  }
+    );
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -50,13 +130,25 @@ const EditScreen = ({ navigation }, props) => {
         behavior={Platform.OS == "ios" ? "padding" : "height"}
         style={styles.screen}
       >
-        {imagem}
+        {getFromDatabase()}
+        {/* {imagem} */}
+        <Button title="Escolher imagem da galeria" color="grey" onPress={pickImage} />
+        {image && (
+          <View style={styles.picture}>
+            <Image
+              source={{ uri: image }}
+              style={{ width: 200, height: 200 }}
+            />
+          </View>
+        )}
         {/* Nome */}
         <View style={styles.box}>
           <Text style={styles.label}>Nome completo</Text>
           <TextInput
             style={styles.input}
             placeholder="Ex.: João da Silva Santos"
+            value={nome}
+            onChangeText={changeName}
           />
         </View>
         {/* E-Mail */}
@@ -66,6 +158,7 @@ const EditScreen = ({ navigation }, props) => {
             style={styles.input}
             keyboardType="email-address"
             placeholder="Ex.: joaodasilva@site.com"
+            value={email}
           />
         </View>
         {/* Alterar Senha */}
@@ -95,7 +188,7 @@ const EditScreen = ({ navigation }, props) => {
             text="Salvar"
             btnStyle={styles.button}
             color={Colors.color}
-            onPress={() => navigation.navigate("Perfil")}
+            onPress={() => editDatabase()}
           />
         </View>
       </KeyboardAvoidingView>
@@ -128,13 +221,14 @@ const styles = StyleSheet.create({
   },
   picture: {
     backgroundColor: Colors.primary,
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 200,
     borderRadius: 100,
     marginBottom: 20,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
+    marginTop: 20
   },
   box: {
     alignItems: "center",

@@ -6,15 +6,55 @@ import {
   Text,
   View,
   TouchableWithoutFeedback,
-  Platform
+  Platform,
+  Alert,
 } from "react-native";
 import Colors from "../Constants/Colors";
 import Button from "../Components/Button";
-import {
-  TextInput,
-} from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
+
+import api from "../service";
 
 const AlterarSenhaScreen = ({ navigation }) => {
+  // NodeJS Request
+  const [novaSenha, setnovaSenha] = useState("");
+  const [senhaAntiga, setsenhaAntiga] = useState("");
+  const [senhaGet, setsenhaGet] = useState("");
+
+  const [getInfo, setgetInfo] = useState(true);
+
+  // GET
+  const database = () => {
+    api
+      .get("1")
+      .then((response) => {
+        setsenhaGet(response.data["senha"]);
+      })
+      .then(() => {
+        if (senhaAntiga != senhaGet) {
+          Alert.alert("Aviso", "Erro ao digitar senha antiga.");
+        } else {
+          editDatabase();
+          Alert.alert("Alteração concluída", "Senha alterada com sucesso.");
+          navigation.navigate("Editar");
+        }
+      })
+      .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+      });
+  };
+
+  // PATCH
+  const editDatabase = () => {
+    api
+      .patch("1", { senha: novaSenha })
+      .then(() => {
+        setsenhaGet(null);
+        setsenhaAntiga(null);
+      })
+      .then(navigation.navigate("Perfil"));
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -30,6 +70,8 @@ const AlterarSenhaScreen = ({ navigation }) => {
               style={styles.input}
               placeholder="****"
               secureTextEntry={true}
+              onChangeText={(oldPsswd) => setsenhaAntiga(oldPsswd)}
+              value={senhaAntiga}
             />
           </View>
           {/* E-Mail */}
@@ -40,6 +82,8 @@ const AlterarSenhaScreen = ({ navigation }) => {
               style={styles.input}
               placeholder="****"
               secureTextEntry={true}
+              onChangeText={(addNewPsswd) => setnovaSenha(addNewPsswd)}
+              value={novaSenha}
             />
           </View>
           <Button
@@ -47,7 +91,7 @@ const AlterarSenhaScreen = ({ navigation }) => {
             btnStyle={styles.button}
             color={Colors.color}
             btnMargin={{ marginTop: 50 }}
-            onPress={() => navigation.navigate("Perfil")}
+            onPress={() => database()}
           />
         </View>
       </KeyboardAvoidingView>
@@ -76,7 +120,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: "#FFF5",
     borderRadius: 10,
-    fontSize: Platform.OS === "ios" ? 20 : 15
+    fontSize: Platform.OS === "ios" ? 20 : 15,
   },
   picture: {
     backgroundColor: Colors.primary,

@@ -1,35 +1,17 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
+import { Alert } from "react-native";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 
-import LoginScreen from "./Screens/LoginScreen";
-import CadastroScreen from "./Screens/CadastroScreen"
-import Navigator from "./AppNavigator";
+import AppNavigator from "./AppNavigator";
 
-const App = () => {
-  const [screen, setscreen] = useState(
-    <LoginScreen onEnter={() => getProfile()} onCadastrar={() => getCadastro()} />
-  );
-
-  const getLogin = () => {
-    setscreen(<LoginScreen onEnter={() => getProfile()} onCadastrar={() => getCadastro()} />)
-  }
-
-  const getProfile = () => {
-    setscreen(<Navigator />);
-  };
-
-  const getCadastro = () => {
-    setscreen(<CadastroScreen onSaveCadastro={() => getLogin()} />);
-  }
+export default function App() {
 
   return (
     <NavigationContainer>
       <StatusBar style="auto" />
-      {screen}
+      <AppNavigator />
     </NavigationContainer>
   );
-};
-
-export default App;
+}

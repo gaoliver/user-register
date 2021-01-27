@@ -1,15 +1,10 @@
 {
-    "Users": [{
-            "nome": "",
-            "email": "",
-            "senha": "",
-            "id": 0
-        },
-        {
-            "nome": "Gabriel Ramos",
-            "email": "email@site.com",
-            "senha": "senha",
-            "id": 1
-        }
-    ]
+  "Users": [
+    {
+      "nome": "",
+      "email": "",
+      "senha": "",
+      "id": 0
+    }
+  ]
 }
