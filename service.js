@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const api = axios.create({
-    baseURL: "LINK AQUI"
+    baseURL: "http://ur1998.pagekite.me/Users"
 })
 
 export default api;
