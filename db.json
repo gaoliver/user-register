@@ -1,28 +1,16 @@
 {
-<<<<<<< HEAD
-  "Users": [
-    {
-      "nome": "",
-      "email": "",
-      "senha": "",
-      "id": 0
-    },
-    {
-      "nome": "Beatriz Furtado",
-      "email": "teste@site.com",
-      "senha": "123",
-      "id": 1,
-      "foto": "file:/data/user/0/host.exp.exponent/cache/ExperienceData/%2540gaoliver%252Fuser-register/ImagePicker/f683d79b-b906-4b9b-802e-f3e7720e3883.jpg"
-    }
-  ]
-=======
-    "Users": [
+    "Users": [{
+            "nome": "",
+            "email": "",
+            "senha": "",
+            "id": 0
+        },
         {
-        "nome": "",
-        "email": "",
-        "senha": "",
-        "id": 0
+            "nome": "Beatriz Furtado",
+            "email": "teste@site.com",
+            "senha": "123",
+            "id": 1,
+            "foto": "file:/data/user/0/host.exp.exponent/cache/ExperienceData/%2540gaoliver%252Fuser-register/ImagePicker/f683d79b-b906-4b9b-802e-f3e7720e3883.jpg"
         }
     ]
->>>>>>> bfd40b21f45e8d4ea644ac3efde1b8aa7a59c9d5
 }
